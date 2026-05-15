@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMNIFI | Spatial Ontology</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Background Particle Wave Canvas -->
+    <canvas id="bg-canvas" class="bg-canvas"></canvas>
+
+    <div id="app-container">
+      <!-- HEADER -->
+      <header class="sys-header">
+        <div class="sys-logo">
+          <span class="logo-text">OMNIFI</span>
+          <span class="logo-subtext">SPATIAL ONTOLOGY ENGINE</span>
+        </div>
+        
+        <div class="header-controls">
+          <div class="sys-status">
+            <div class="status-indicator online"></div>
+            <span>DATA PLANE: ACTIVE</span>
+          </div>
+          <button id="theme-toggle" class="theme-btn">
+            <svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT GRID -->
+      <main class="grid-layout">
+        
+        <!-- LEFT PANEL: DATA SOURCES -->
+        <aside class="panel left-panel">
+          <div class="panel-header">
+            <h2>DATA SOURCES & LOGIC</h2>
+          </div>
+          <div class="panel-content">
+            <div class="data-block">
+              <h3>RF TELEMETRY</h3>
+              <div class="metric-row">
+                <span class="metric-label">CSI PKT/S</span>
+                <span class="metric-value" id="csi-rate">0</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">SUBCARRIERS</span>
+                <span class="metric-value">256</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">NOISE FLOOR</span>
+                <span class="metric-value" id="noise-floor">-92 dBm</span>
+              </div>
+            </div>
+
+            <div class="data-block mt-4">
+              <h3>SYSTEM TOPOLOGY</h3>
+              <div class="topology-list">
+                <div class="topo-item"><span class="node-dot"></span> <span class="mono">RT-AX88U (Core)</span></div>
+                <div class="topo-item"><span class="node-dot"></span> <span class="mono">ESP32-S3 (Edge Node 1)</span></div>
+                <div class="topo-item inactive"><span class="node-dot"></span> <span class="mono">ESP32-S3 (Edge Node 2)</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="panel-divider"></div>
+          
+          <div class="panel-header">
+            <h2>EVENT LOG</h2>
+          </div>
+          <div class="panel-content log-container" id="sys-logs">
+            <!-- Logs injected via JS -->
+          </div>
+        </aside>
+
+        <!-- CENTER PANEL: SPATIAL ONTOLOGY -->
+        <section class="panel center-panel radar-container">
+          <div class="panel-header overlay-header">
+            <h2>SPATIAL RECONSTRUCTION : REAL-TIME OPERATIONS</h2>
+            <div class="sys-time mono" id="sys-time">00:00:00 UTC</div>
+          </div>
+          
+          <div class="radar-wrapper">
+            <canvas id="radar-canvas"></canvas>
+            <!-- Crosshairs -->
+            <div class="crosshair-h"></div>
+            <div class="crosshair-v"></div>
+          </div>
+        </section>
+
+        <!-- RIGHT PANEL: ENTITY INSPECTOR -->
+        <aside class="panel right-panel">
+          <div class="panel-header">
+            <h2>ENTITY ONTOLOGY</h2>
+          </div>
+          
+          <div class="entity-profile" id="entity-profile">
+            <div class="target-bracket">
+              <div class="wireframe-container">
+                 <canvas id="pose-canvas"></canvas>
+              </div>
+              <div class="bracket-tl"></div>
+              <div class="bracket-tr"></div>
+              <div class="bracket-bl"></div>
+              <div class="bracket-br"></div>
+            </div>
+            
+            <div class="entity-details">
+              <div class="entity-header">
+                <h3 id="entity-id" class="mono">AWAITING DATA</h3>
+                <span id="entity-type" class="badge">--</span>
+              </div>
+              
+              <div class="metric-group">
+                <div class="bar-chart-container">
+                  <div class="bar-header">
+                    <span class="chart-label">BIOMETRIC CONFIDENCE</span>
+                    <span class="chart-val mono" id="conf-val">0%</span>
+                  </div>
+                  <div class="bar-bg"><div class="bar-fill" id="conf-bar" style="width: 0%"></div></div>
+                </div>
+              </div>
+              
+              <div class="bio-metrics">
+                <div class="bio-box">
+                  <span class="bio-label">BPM</span>
+                  <span class="bio-val mono" id="bpm-val">--</span>
+                </div>
+                <div class="bio-box">
+                  <span class="bio-label">RESP</span>
+                  <span class="bio-val mono" id="resp-val">--</span>
+                </div>
+                <div class="bio-box">
+                  <span class="bio-label">STATE</span>
+                  <span class="bio-val mono" id="state-val">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-divider"></div>
+
+          <div class="panel-header">
+            <h2>IDENTIFIED SUBJECTS</h2>
+          </div>
+          <div class="panel-content">
+            <ul class="signature-list" id="sig-list">
+              <!-- Signatures injected via JS -->
+            </ul>
+          </div>
+        </aside>
+
+      </main>
+      
+      <!-- FOOTER -->
+      <footer class="sys-footer">
+        <div class="footer-left">THE MODERN OPERATING SYSTEM FOR SPATIAL AI</div>
+        <div class="footer-right mono">LAT: 37.7749 // LNG: -122.4194 // ENCLAVE SECURE</div>
+      </footer>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
